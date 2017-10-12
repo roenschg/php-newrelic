@@ -1,7 +1,7 @@
 {
     "name": "roenschg/php-newrelic",
     "description": "Package to send data to NewRelic with the agent or http defined by configuration.",
-    "type": "project",
+    "type": "library",
     "authors": [
         {
             "name": "Gerd Rönsch",
