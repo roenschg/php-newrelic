@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types=1);
 
 
 
@@ -39,7 +38,7 @@ class HttpInsertApiTest extends TestCase
     /**
      *
      */
-    public function testSendCustomEvent(): void
+    public function testSendCustomEvent()
     {
         $curlMock = $this
             ->getMockBuilder(CurlWrapper::class)
@@ -66,7 +65,7 @@ class HttpInsertApiTest extends TestCase
     /**
      *
      */
-    public function testRetryAlways500StatusCode(): void
+    public function testRetryAlways500StatusCode()
     {
         $curlMock = $this
             ->getMockBuilder(CurlWrapper::class)
@@ -104,7 +103,7 @@ class HttpInsertApiTest extends TestCase
     /**
      *
      */
-    public function testNoRetry400StatusCode(): void
+    public function testNoRetry400StatusCode()
     {
         $curlMock = $this
             ->getMockBuilder(CurlWrapper::class)
@@ -142,7 +141,7 @@ class HttpInsertApiTest extends TestCase
     /**
      *
      */
-    public function testNoRetry300StatusCode(): void
+    public function testNoRetry300StatusCode()
     {
         $curlMock = $this
             ->getMockBuilder(CurlWrapper::class)
@@ -180,7 +179,7 @@ class HttpInsertApiTest extends TestCase
     /**
      *
      */
-    public function testNoRetryUnkownStatusCode(): void
+    public function testNoRetryUnkownStatusCode()
     {
         $curlMock = $this
             ->getMockBuilder(CurlWrapper::class)
@@ -218,7 +217,7 @@ class HttpInsertApiTest extends TestCase
     /**
      * @expectedException \Exception
      */
-    public function testCurlError(): void
+    public function testCurlError()
     {
         $curlMock = $this
             ->getMockBuilder(CurlWrapper::class)

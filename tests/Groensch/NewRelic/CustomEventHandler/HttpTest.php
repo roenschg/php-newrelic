@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types=1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
@@ -38,7 +37,7 @@ class HttpTest extends TestCase
     /**
      * @expectedException \Groensch\NewRelic\CustomEventIsToBigException
      */
-    public function testThrowsCustomEventIsToBigException(): void
+    public function testThrowsCustomEventIsToBigException()
     {
         $data = ['test' => str_repeat(".", (1024*1024)+1)];
 

@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types = 1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
@@ -36,7 +35,7 @@ class PHPAgent implements CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent($name, array $attributes)
     {
         newrelic_record_custom_event($name, $attributes);
     }

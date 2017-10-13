@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types=1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
@@ -40,7 +39,7 @@ class PHPAgentTest extends TestCase
     /**
      *
      */
-    public function testThrowsCustomEventIsToBigException(): void
+    public function testThrowsCustomEventIsToBigException()
     {
         // Eval because this will never fit to the coding style requirements
         eval('function newrelic_record_custom_event()
