@@ -52,7 +52,7 @@ class CurlWrapper
     /**
      * @param string $url
      */
-    public function open(string $url): void
+    public function open($url)
     {
         if (!$this->curlOpened) {
             $this->curlHandle = curl_init($url);
@@ -64,7 +64,7 @@ class CurlWrapper
     /**
      *
      */
-    public function close(): void
+    public function close()
     {
         if ($this->curlOpened) {
             curl_close($this->curlHandle);
@@ -76,7 +76,7 @@ class CurlWrapper
     /**
      * @return bool
      */
-    public function execute(): bool
+    public function execute()
     {
         return curl_exec($this->curlHandle);
     }
@@ -86,7 +86,7 @@ class CurlWrapper
      *
      * @return CurlWrapper
      */
-    public function setOptionsArray(array $options): CurlWrapper
+    public function setOptionsArray(array $options)
     {
         curl_setopt_array($this->curlHandle, $options);
 
@@ -96,7 +96,7 @@ class CurlWrapper
     /**
      * @return array
      */
-    public function getInfo(): array
+    public function getInfo()
     {
         return curl_getinfo($this->curlHandle);
     }
@@ -104,7 +104,7 @@ class CurlWrapper
     /**
      * @return string
      */
-    public function getError(): string
+    public function getError()
     {
         return curl_error($this->curlHandle);
     }
@@ -112,7 +112,7 @@ class CurlWrapper
     /**
      * @return int
      */
-    public function getErrno(): int
+    public function getErrno()
     {
         return curl_errno($this->curlHandle);
     }

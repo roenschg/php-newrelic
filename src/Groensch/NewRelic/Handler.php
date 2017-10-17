@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types = 1);
 
 namespace Groensch\NewRelic;
 
@@ -54,7 +53,7 @@ class Handler
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent($name, $attributes)
     {
         // Throw an exception if we want to record to many attributes to an custom event
         // This happens because of a design flaw so we don´ hesitate if the program execution stops because of this
@@ -73,7 +72,7 @@ class Handler
     /**
      * @param array $eventAttributes
      */
-    private function truncateAttributesThatAreToLongForTheCustomEvent(array &$eventAttributes): void
+    private function truncateAttributesThatAreToLongForTheCustomEvent(&$eventAttributes)
     {
         array_walk($eventAttributes, function (&$value) {
             if (is_string($value)) {
@@ -90,7 +89,7 @@ class Handler
      *
      * @throws ToManyAttributesForCustomEventException
      */
-    private function throwExceptionIfThereAreToManyAttributesForTheCustomEvent(string $eventName, array $eventAttributes)
+    private function throwExceptionIfThereAreToManyAttributesForTheCustomEvent($eventName, $eventAttributes)
     {
         if (count($eventAttributes) > self::API_ATTRIBUTES_COUNT_MAX) {
             throw new ToManyAttributesForCustomEventException(sprintf(
@@ -105,7 +104,7 @@ class Handler
     /**
      * @param array $eventAttributes
      */
-    private function throwExceptionIfAnAttributeNameIsANumber(array $eventAttributes)
+    private function throwExceptionIfAnAttributeNameIsANumber($eventAttributes)
     {
         array_walk($eventAttributes, function (&$value, $attributeName) {
             if (is_numeric($attributeName)) {
@@ -120,7 +119,7 @@ class Handler
     /**
      * @return CustomEventHandlerInterface
      */
-    private function getCustomEventHandler(): CustomEventHandlerInterface
+    private function getCustomEventHandler()
     {
         return $this->customEventHandler;
     }
@@ -130,7 +129,7 @@ class Handler
      *
      * @return Handler $this
      */
-    private function setCustomEventHandler(CustomEventHandlerInterface $customEventHandler): Handler
+    private function setCustomEventHandler(CustomEventHandlerInterface $customEventHandler)
     {
         $this->customEventHandler = $customEventHandler;
 

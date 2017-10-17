@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types = 1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
@@ -56,7 +55,7 @@ class Http implements CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent($name, array $attributes)
     {
         $eventObject = [
             'eventType' => $name,
@@ -83,7 +82,7 @@ class Http implements CustomEventHandlerInterface
     /**
      * @return HttpInsertApi
      */
-    public function getHttpInsertApi(): HttpInsertApi
+    public function getHttpInsertApi()
     {
         return $this->httpInsertApi;
     }
@@ -93,7 +92,7 @@ class Http implements CustomEventHandlerInterface
      *
      * @return Http $this
      */
-    public function setHttpInsertApi(HttpInsertApi $httpInsertApi): Http
+    public function setHttpInsertApi(HttpInsertApi $httpInsertApi)
     {
         $this->httpInsertApi = $httpInsertApi;
 

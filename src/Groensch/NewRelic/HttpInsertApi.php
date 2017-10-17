@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types = 1);
 
 namespace Groensch\NewRelic;
 
@@ -52,7 +51,7 @@ class HttpInsertApi
      * @param callable    $errorHandler Parameters are: $errorMessage, $url, $payload
      * @param CurlWrapper $curlHandler
      */
-    public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null, ?CurlWrapper $curlHandler = null)
+    public function __construct($apiAccountId, $apiInsertKey, callable $errorHandler = null, $curlHandler = null)
     {
         $this
             ->setApiAccountId($apiAccountId)
@@ -70,7 +69,7 @@ class HttpInsertApi
     /**
      * @param string $payload
      */
-    public function sendCustomEvents(string $payload): void
+    public function sendCustomEvents($payload)
     {
         $retryCount = 0;
         $curl = $this->getCurlHandler();
@@ -130,7 +129,7 @@ class HttpInsertApi
     /**
      * @return CurlWrapper
      */
-    public function getCurlHandler(): CurlWrapper
+    public function getCurlHandler()
     {
         return $this->curlHandler;
     }
@@ -140,7 +139,7 @@ class HttpInsertApi
      *
      * @return HttpInsertApi $this
      */
-    public function setCurlHandler(CurlWrapper $curlHandler): HttpInsertApi
+    public function setCurlHandler(CurlWrapper $curlHandler)
     {
         $this->curlHandler = $curlHandler;
 
@@ -152,7 +151,7 @@ class HttpInsertApi
      *
      * @return bool
      */
-    private function shouldIRetry(int $statusCode): bool
+    private function shouldIRetry($statusCode)
     {
         if ($statusCode >= 400 && $statusCode < 500) { // NO! You fucked up
             return false;
@@ -186,7 +185,7 @@ class HttpInsertApi
      *
      * @return HttpInsertApi $this
      */
-    private function setInsertApiKey($apiKey): HttpInsertApi
+    private function setInsertApiKey($apiKey)
     {
         $this->apiKey = $apiKey;
 
@@ -206,7 +205,7 @@ class HttpInsertApi
      *
      * @return HttpInsertApi $this
      */
-    private function setApiAccountId($apiAccountId): HttpInsertApi
+    private function setApiAccountId($apiAccountId)
     {
         $this->apiAccountId = $apiAccountId;
 
@@ -216,7 +215,7 @@ class HttpInsertApi
     /**
      * @return callable
      */
-    private function getErrorHandler(): callable
+    private function getErrorHandler()
     {
         return $this->errorHandler;
     }
@@ -226,15 +225,15 @@ class HttpInsertApi
      *
      * @return HttpInsertApi $this
      */
-    private function setErrorHandler(callable $errorHandler): HttpInsertApi
+    private function setErrorHandler(callable $errorHandler)
     {
         $this->errorHandler = $errorHandler;
 
         return $this;
     }
 
-    private function callErrorHandler($errorMessage, $url, $payload): void
+    private function callErrorHandler($errorMessage, $url, $payload)
     {
-        $this->getErrorHandler()($errorMessage, $url, $payload);
+        call_user_func($this->getErrorHandler(), $errorMessage, $url, $payload);
     }
 }

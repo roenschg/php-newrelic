@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types = 1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
@@ -36,5 +35,5 @@ interface CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void;
+    public function recordCustomEvent($name, array $attributes);
 }

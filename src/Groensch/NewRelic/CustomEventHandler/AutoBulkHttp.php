@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-declare(strict_types = 1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
@@ -67,7 +66,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent($name, array $attributes)
     {
         // If the buffer get´s to full before adding a new custom event to it, we flush it and send the data
         // to new relic
@@ -83,7 +82,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      *
      */
-    private function flushCustomEventBuffer(): void
+    private function flushCustomEventBuffer()
     {
         if (strlen($this->customEventBuffer) <= 0) {
             return;
@@ -104,7 +103,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      * @param string $eventName
      * @param array  $eventData
      */
-    private function addCustomEventToBuffer(string $eventName, array $eventData): void
+    private function addCustomEventToBuffer($eventName, array $eventData)
     {
         $eventJson = $this->convertCustomEventInfoToJson($eventName, $eventData);
 
@@ -123,7 +122,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      *
      * @return int
      */
-    private function getEventSizeInBytes(string $eventName, array $eventData): int
+    private function getEventSizeInBytes($eventName, array $eventData)
     {
         $size = strlen($this->convertCustomEventInfoToJson($eventName, $eventData));
 
@@ -140,7 +139,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      *
      * @return string
      */
-    private function convertCustomEventInfoToJson(string $eventName, array $eventData): string
+    private function convertCustomEventInfoToJson($eventName, array $eventData)
     {
         $customEvent = [
             'eventType' => $eventName,
@@ -154,7 +153,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * @return int
      */
-    private function getInternalCustomEventBufferCount(): int
+    private function getInternalCustomEventBufferCount()
     {
         return $this->customEventBufferCount;
     }
@@ -162,7 +161,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * @return int
      */
-    private function getInternalCustomEventBufferSizeInBytes(): int
+    private function getInternalCustomEventBufferSizeInBytes()
     {
         // We will have two brackets around the buffer later
         return strlen($this->customEventBuffer) + 2;
@@ -176,7 +175,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      *
      * @throws CustomEventIsToBigException
      */
-    private function isEnoughSpaceToAddCustomEventToBuffer(string $eventName, array $eventData): bool
+    private function isEnoughSpaceToAddCustomEventToBuffer($eventName, array $eventData)
     {
         $possibleEventsLeft = self::API_EVENT_COUNT_PER_REQUEST_MAX - $this->getInternalCustomEventBufferCount();
         if ($possibleEventsLeft < 1) {
@@ -206,7 +205,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * @return HttpInsertApi
      */
-    private function getNewRelicHttpApi(): HttpInsertApi
+    private function getNewRelicHttpApi()
     {
         return $this->newRelicHttpApi;
     }
@@ -216,7 +215,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      *
      * @return AutoBulkHttp $this
      */
-    private function setNewRelicHttpApi(HttpInsertApi $newRelicHttpApi): AutoBulkHttp
+    private function setNewRelicHttpApi(HttpInsertApi $newRelicHttpApi)
     {
         $this->newRelicHttpApi = $newRelicHttpApi;
 
