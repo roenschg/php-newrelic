@@ -49,7 +49,10 @@ class AutoBulkHttpTest extends TestCase
         $httpInsertApiMock
             ->expects($this->once())
             ->method('sendCustomEvents')
-            ->with('[{"eventType":"moneyTransfer","from":"Russia","to":"Saudi Arabia"}]');
+            ->with(sprintf(
+                '[{"eventType":"moneyTransfer","timestamp":%d,"from":"Russia","to":"Saudi Arabia"}]',
+                time()
+            ));
 
         $instance = new AutoBulkHttp($httpInsertApiMock);
 
@@ -76,7 +79,11 @@ class AutoBulkHttpTest extends TestCase
         $httpInsertApiMock
             ->expects($this->once())
             ->method('sendCustomEvents')
-            ->with('[{"eventType":"moneyTransfer","from":"Russia","to":"Saudi Arabia"},{"eventType":"delivery","warnings":"Explosives"}]');
+            ->with(sprintf(
+                '[{"eventType":"moneyTransfer","timestamp":%d,"from":"Russia","to":"Saudi Arabia"},{"eventType":"delivery","timestamp":%d,"warnings":"Explosives"}]',
+                time(),
+                time()
+            ));
 
         $instance = new AutoBulkHttp($httpInsertApiMock);
 
@@ -140,7 +147,7 @@ class AutoBulkHttpTest extends TestCase
     {
         $eventsPerFlushCount = 3;
         $flushCount = 5;
-        $additionCharacterForEachCustomEvent = 30;
+        $additionCharacterForEachCustomEvent = 30 + strlen('"timestamp:"'.time().',');
         $additionCharacterForTheRequestCount = 2;
         $flushThreshold = 1048576;
         $size = (int) floor(($flushThreshold - $additionCharacterForTheRequestCount - ($eventsPerFlushCount * $additionCharacterForEachCustomEvent)) / $eventsPerFlushCount); // 1048604

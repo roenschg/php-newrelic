@@ -144,6 +144,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     {
         $customEvent = [
             'eventType' => $eventName,
+            'timestamp' => time(),
         ];
         $customEvent = array_merge($customEvent, $eventData);
 
