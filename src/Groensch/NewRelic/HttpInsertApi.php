@@ -47,11 +47,12 @@ class HttpInsertApi
 
     /**
      * HttpApi constructor.
-     * @param int      $apiAccountId
-     * @param string   $apiInsertKey
-     * @param callable $errorHandler
+     * @param int         $apiAccountId
+     * @param string      $apiInsertKey
+     * @param callable    $errorHandler Parameters are: $errorMessage, $url, $payload
+     * @param CurlWrapper $curlHandler
      */
-    public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null)
+    public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null, ?CurlWrapper $curlHandler = null)
     {
         $this
             ->setApiAccountId($apiAccountId)
@@ -60,9 +61,10 @@ class HttpInsertApi
                 $errorHandler ? $errorHandler : function () {
                 }
             )
+            ->setCurlHandler(
+                $curlHandler ? $curlHandler : new CurlWrapper()
+            )
         ;
-
-        $this->curlHandler = new CurlWrapper();
     }
 
     /**
@@ -90,17 +92,18 @@ class HttpInsertApi
 
             // Execute request to NewRelic api
             $curlRequestSuccessfull = $curl->execute();
-            if (false === $curlRequestSuccessfull) {
-                throw new \Exception(
+            if (!$curlRequestSuccessfull) {
+                $this->callErrorHandler(
                     sprintf(
-                        "Curl request to NewRelic api was not successfull. Data: %s",
-                        json_encode([
-                            'url' => $url,
-                            'curl_error' => $curl->getError(),
-                        ])
+                        "Curl request to NewRelic api was not successfull. Curl errno: %d, Curl error: '%s'",
+                        $curl->getError(),
+                        $curl->getErrno()
                     ),
-                    $curl->getErrno()
+                    $url,
+                    $payload
                 );
+
+                return;
             }
 
             $info = $curl->getInfo();
@@ -113,13 +116,13 @@ class HttpInsertApi
 
         // If sending was not successfull, call an error handler
         if (!$isCustomEventSentSuccessfull) {
-            call_user_func(
-                $this->getErrorHandler(),
-                $payload,
-                [
-                    'url' => $url,
-                    'lastStatusCode' => $statusCode,
-                ]
+            $this->callErrorHandler(
+                sprintf(
+                    'Even after retrying multiple times it was not possible to send data to new relic api! Last status code: %d',
+                    $statusCode
+                ),
+                $url,
+                $payload
             );
         }
     }
@@ -228,5 +231,10 @@ class HttpInsertApi
         $this->errorHandler = $errorHandler;
 
         return $this;
+    }
+
+    private function callErrorHandler($errorMessage, $url, $payload): void
+    {
+        $this->getErrorHandler()($errorMessage, $url, $payload);
     }
 }
