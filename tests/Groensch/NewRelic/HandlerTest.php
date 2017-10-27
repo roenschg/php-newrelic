@@ -26,6 +26,7 @@
 
 namespace Groensch\NewRelic;
 
+use Groensch\NewRelic\TransactionHandler\PHPAgent;
 use PHPUnit\Framework\TestCase;
 use Groensch\NewRelic\CustomEventHandler\CustomEventHandlerInterface;
 
@@ -112,5 +113,61 @@ class HandlerTest extends TestCase
         ];
 
         $instance->recordCustomEvent('test', $data);
+    }
+
+    public function transactionHandlerIsCalledProvider(): array
+    {
+        $anonFunction = function () {
+        };
+
+        return [
+            ['addCustomParameter', ['key', 'value'], true],
+            ['backgroundJob', [false], null],
+            ['captureParams', [true], null],
+            ['customMetric', ['metricName', 1.2], true],
+            ['disableAutorum', [], true],
+            ['endOfTransaction', [], null],
+            ['endTransaction', [false], true],
+            ['ignoreApdex', [], null],
+            ['ignoreTransaction', [], null],
+            ['nameTransaction', ['name'], true],
+            ['noticeError', ['message', new \Exception()], null],
+            ['recordDatastoreSegment', [$anonFunction, ['test']], true],
+            ['setAppname', ['name', 'license', false], false],
+            ['setUserAttributes', ['userValue', 'AccountValue', 'productValue'], true],
+            ['startTransaction', ['appname', 'license'], true],
+        ];
+    }
+
+    /**
+     * @dataProvider transactionHandlerIsCalledProvider
+     *
+     * @param string $methodName
+     * @param array $parameters
+     * @param $expectedReturnValue
+     */
+    public function testTransactionHandlerIsCalled(
+        string $methodName,
+        array $parameters,
+        $expectedReturnValue
+    ) {
+        $transactionHandlerName = $this
+            ->getMockBuilder(PHPAgent::class)
+            ->setMethods([$methodName])
+            ->getMock()
+        ;
+
+        $transactionHandlerName
+            ->expects($this->once())
+            ->method($methodName)
+            ->willReturn($expectedReturnValue)
+            ->withConsecutive($parameters);
+
+        $instance = new Handler(
+            $this->getMockBuilder(CustomEventHandlerInterface::class)->getMock(),
+            $transactionHandlerName
+        );
+
+        $this->assertEquals($expectedReturnValue, call_user_func_array([$instance, $methodName], $parameters));
     }
 }
