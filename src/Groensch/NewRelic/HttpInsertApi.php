@@ -231,7 +231,12 @@ class HttpInsertApi
         return $this;
     }
 
-    private function callErrorHandler($errorMessage, $url, $payload): void
+    /**
+     * @param string $errorMessage
+     * @param string $url
+     * @param string $payload
+     */
+    private function callErrorHandler(string $errorMessage, string $url, string $payload): void
     {
         $this->getErrorHandler()($errorMessage, $url, $payload);
     }
