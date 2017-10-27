@@ -28,6 +28,8 @@ declare(strict_types = 1);
 namespace Groensch\NewRelic;
 
 use Groensch\NewRelic\CustomEventHandler\CustomEventHandlerInterface;
+use Groensch\NewRelic\TransactionHandler\TransactionHandlerInterface;
+use Groensch\NewRelic\TransactionHandler\PHPAgent as TransactionHandlerPHPAgent;
 
 /**
  * Class Handler
@@ -38,16 +40,25 @@ class Handler
     const API_ATTRIBUTE_LENGTH_MAX = 4096;
 
     private $customEventHandler = null;
+    private $transactionHandler = null;
 
     /**
      * Handler constructor.
-     * @param CustomEventHandlerInterface $customEventHandler
+     *
+     * @param CustomEventHandlerInterface      $customEventHandler
+     * @param TransactionHandlerInterface|null $transactionHandler If nothing is set it will use the Groensch\NewRelic\TransactionHandler\PHPAgent
      */
-    public function __construct(CustomEventHandlerInterface $customEventHandler)
+    public function __construct(CustomEventHandlerInterface $customEventHandler, ?TransactionHandlerInterface $transactionHandler = null)
     {
         $this
             ->setCustomEventHandler($customEventHandler)
         ;
+
+        if ($transactionHandler) {
+            $this->setTransactionHandler($transactionHandler);
+        } else {
+            $this->setTransactionHandler(new TransactionHandlerPHPAgent());
+        }
     }
 
     /**
@@ -68,6 +79,170 @@ class Handler
 
         // Record custom event with a CustomEventHandler
         $this->getCustomEventHandler()->recordCustomEvent($name, $attributes);
+    }
+
+    /**
+     * @param string $key
+     * @param scalar $value
+     *
+     * @return mixed
+     */
+    public function addCustomParameter(string $key, $value)
+    {
+        return $this->getTransactionHandler()->addCustomParameter($key, $value);
+    }
+
+    /**
+     * @param bool $flag
+     */
+    public function backgroundJob(bool $flag = true): void
+    {
+        $this->getTransactionHandler()->backgroundJob($flag);
+    }
+
+    /**
+     * @param bool $enableFlag
+     */
+    public function captureParams(bool $enableFlag = true): void
+    {
+        $this->getTransactionHandler()->captureParams($enableFlag);
+    }
+
+    /**
+     * @param string $metricName
+     * @param float  $value
+     *
+     * @return mixed
+     */
+    public function customMetric(string $metricName, float $value)
+    {
+        return $this->getTransactionHandler()->customMetric($metricName, $value);
+    }
+
+    /**
+     * @return bool
+     */
+    public function disableAutorum(): bool
+    {
+        return $this->getTransactionHandler()->disableAutorum();
+    }
+
+    /**
+     *
+     */
+    public function endOfTransaction(): void
+    {
+        $this->getTransactionHandler()->endOfTransaction();
+    }
+
+    /**
+     * @param bool $ignore
+     *
+     * @return mixed
+     */
+    public function endTransaction(bool $ignore = false)
+    {
+        return $this->getTransactionHandler()->endTransaction($ignore);
+    }
+
+    /**
+     *
+     */
+    public function ignoreApdex(): void
+    {
+        $this->getTransactionHandler()->ignoreApdex();
+    }
+
+    /**
+     *
+     */
+    public function ignoreTransaction(): void
+    {
+        $this->getTransactionHandler()->ignoreTransaction();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function nameTransaction(string $name): bool
+    {
+        return $this->getTransactionHandler()->nameTransaction($name);
+    }
+
+    /**
+     * @param string     $message
+     * @param \Exception $exception
+     */
+    public function noticeError(string $message, \Exception $exception): void
+    {
+        $this->getTransactionHandler()->noticeError($message, $exception);
+    }
+
+    /**
+     * @param callable $func
+     * @param array    $parameters
+     *
+     * @return mixed
+     */
+    public function recordDatastoreSegment(callable $func, array $parameters)
+    {
+        return $this->getTransactionHandler()->recordDatastoreSegment($func, $parameters);
+    }
+
+    /**
+     * @param string $name
+     * @param string $license
+     * @param bool   $xmit
+     *
+     * @return bool
+     */
+    public function setAppname(string $name, string $license = '', bool $xmit = false): bool
+    {
+        return $this->getTransactionHandler()->setAppname($name, $license, $xmit);
+    }
+
+    /**
+     * @param string $userValue
+     * @param string $accountValue
+     * @param string $productValue
+     *
+     * @return mixed
+     */
+    public function setUserAttributes(string $userValue, string $accountValue, string $productValue)
+    {
+        return $this->getTransactionHandler()->setUserAttributes($userValue, $accountValue, $productValue);
+    }
+
+    /**
+     * @param string      $appname
+     * @param string|null $license
+     *
+     * @return mixed
+     */
+    public function startTransaction(string $appname, string $license = null)
+    {
+        return $this->getTransactionHandler()->startTransaction($appname, $license);
+    }
+
+    /**
+     * @return TransactionHandlerInterface
+     */
+    public function getTransactionHandler()
+    {
+        return $this->transactionHandler;
+    }
+
+    /**
+     * @param null $transactionHandler
+     * @return Handler $this
+     */
+    public function setTransactionHandler($transactionHandler): Handler
+    {
+        $this->transactionHandler = $transactionHandler;
+
+        return $this;
     }
 
     /**
