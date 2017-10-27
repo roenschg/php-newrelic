@@ -87,7 +87,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
         if (strlen($this->customEventBuffer) <= 0) {
             return;
         }
-        
+
         $payload = sprintf(
             '[%s]',
             $this->customEventBuffer

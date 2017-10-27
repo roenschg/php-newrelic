@@ -28,10 +28,12 @@
 
 namespace Groensch\NewRelic;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class HttpInsertApiTest
  */
-class HttpInsertApiTest extends \PHPUnit_Framework_TestCase
+class HttpInsertApiTest extends TestCase
 {
     /**
      *
