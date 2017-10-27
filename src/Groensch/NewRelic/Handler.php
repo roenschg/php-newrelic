@@ -47,7 +47,7 @@ class Handler
      * @param CustomEventHandlerInterface      $customEventHandler
      * @param TransactionHandlerInterface|null $transactionHandler If nothing is set it will use the Groensch\NewRelic\TransactionHandler\PHPAgent
      */
-    public function __construct(CustomEventHandlerInterface $customEventHandler, ?TransactionHandlerInterface $transactionHandler = null)
+    public function __construct(CustomEventHandlerInterface $customEventHandler, TransactionHandlerInterface $transactionHandler = null)
     {
         $this
             ->setCustomEventHandler($customEventHandler)
@@ -86,7 +86,7 @@ class Handler
      *
      * @return mixed
      */
-    public function addCustomParameter(string $key, $value)
+    public function addCustomParameter($key, $value)
     {
         return $this->getTransactionHandler()->addCustomParameter($key, $value);
     }
@@ -94,7 +94,7 @@ class Handler
     /**
      * @param bool $flag
      */
-    public function backgroundJob(bool $flag = true): void
+    public function backgroundJob($flag = true)
     {
         $this->getTransactionHandler()->backgroundJob($flag);
     }
@@ -102,7 +102,7 @@ class Handler
     /**
      * @param bool $enableFlag
      */
-    public function captureParams(bool $enableFlag = true): void
+    public function captureParams($enableFlag = true)
     {
         $this->getTransactionHandler()->captureParams($enableFlag);
     }
@@ -113,7 +113,7 @@ class Handler
      *
      * @return mixed
      */
-    public function customMetric(string $metricName, float $value)
+    public function customMetric($metricName, $value)
     {
         return $this->getTransactionHandler()->customMetric($metricName, $value);
     }
@@ -121,7 +121,7 @@ class Handler
     /**
      * @return bool
      */
-    public function disableAutorum(): bool
+    public function disableAutorum()
     {
         return $this->getTransactionHandler()->disableAutorum();
     }
@@ -129,7 +129,7 @@ class Handler
     /**
      *
      */
-    public function endOfTransaction(): void
+    public function endOfTransaction()
     {
         $this->getTransactionHandler()->endOfTransaction();
     }
@@ -139,7 +139,7 @@ class Handler
      *
      * @return mixed
      */
-    public function endTransaction(bool $ignore = false)
+    public function endTransaction($ignore = false)
     {
         return $this->getTransactionHandler()->endTransaction($ignore);
     }
@@ -147,7 +147,7 @@ class Handler
     /**
      *
      */
-    public function ignoreApdex(): void
+    public function ignoreApdex()
     {
         $this->getTransactionHandler()->ignoreApdex();
     }
@@ -155,7 +155,7 @@ class Handler
     /**
      *
      */
-    public function ignoreTransaction(): void
+    public function ignoreTransaction()
     {
         $this->getTransactionHandler()->ignoreTransaction();
     }
@@ -165,7 +165,7 @@ class Handler
      *
      * @return bool
      */
-    public function nameTransaction(string $name): bool
+    public function nameTransaction($name)
     {
         return $this->getTransactionHandler()->nameTransaction($name);
     }
@@ -174,7 +174,7 @@ class Handler
      * @param string     $message
      * @param \Exception $exception
      */
-    public function noticeError(string $message, \Exception $exception): void
+    public function noticeError($message, \Exception $exception)
     {
         $this->getTransactionHandler()->noticeError($message, $exception);
     }
@@ -197,7 +197,7 @@ class Handler
      *
      * @return bool
      */
-    public function setAppname(string $name, string $license = '', bool $xmit = false): bool
+    public function setAppname($name, $license = '', $xmit = false)
     {
         return $this->getTransactionHandler()->setAppname($name, $license, $xmit);
     }
@@ -209,7 +209,7 @@ class Handler
      *
      * @return mixed
      */
-    public function setUserAttributes(string $userValue, string $accountValue, string $productValue)
+    public function setUserAttributes($userValue, $accountValue, $productValue)
     {
         return $this->getTransactionHandler()->setUserAttributes($userValue, $accountValue, $productValue);
     }
@@ -220,7 +220,7 @@ class Handler
      *
      * @return mixed
      */
-    public function startTransaction(string $appname, string $license = null)
+    public function startTransaction($appname, $license = null)
     {
         return $this->getTransactionHandler()->startTransaction($appname, $license);
     }
@@ -237,7 +237,7 @@ class Handler
      * @param null $transactionHandler
      * @return Handler $this
      */
-    public function setTransactionHandler($transactionHandler): Handler
+    public function setTransactionHandler($transactionHandler)
     {
         $this->transactionHandler = $transactionHandler;
 

@@ -115,7 +115,7 @@ class HandlerTest extends TestCase
         $instance->recordCustomEvent('test', $data);
     }
 
-    public function transactionHandlerIsCalledProvider(): array
+    public function transactionHandlerIsCalledProvider()
     {
         $anonFunction = function () {
         };
@@ -147,7 +147,7 @@ class HandlerTest extends TestCase
      * @param $expectedReturnValue
      */
     public function testTransactionHandlerIsCalled(
-        string $methodName,
+        $methodName,
         array $parameters,
         $expectedReturnValue
     ) {
