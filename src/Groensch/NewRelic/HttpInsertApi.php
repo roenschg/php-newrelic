@@ -54,17 +54,15 @@ class HttpInsertApi
      */
     public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null, ?CurlWrapper $curlHandler = null)
     {
-        $this
-            ->setApiAccountId($apiAccountId)
-            ->setInsertApiKey($apiInsertKey)
-            ->setErrorHandler(
-                $errorHandler ? $errorHandler : function () {
-                }
-            )
-            ->setCurlHandler(
-                $curlHandler ? $curlHandler : new CurlWrapper()
-            )
-        ;
+        $this->setApiAccountId($apiAccountId);
+        $this->setInsertApiKey($apiInsertKey);
+        $this->setErrorHandler(
+            $errorHandler ? $errorHandler : function () {
+            }
+        );
+        $this->setCurlHandler(
+            $curlHandler ? $curlHandler : new CurlWrapper()
+        );
     }
 
     /**
