@@ -56,6 +56,9 @@ class PHPAgentTest extends TestCase
      */
     public function newRelicFunctionWasCalledProvider(): array
     {
+        $anonFunction = function () {
+        };
+
         return [
             ['addCustomParameter',     'newrelic_add_custom_parameter',     ['key', 1], true],
             ['backgroundJob',          'newrelic_background_job',           []],
@@ -68,7 +71,7 @@ class PHPAgentTest extends TestCase
             ['ignoreTransaction',      'newrelic_ignore_transaction',       []],
             ['nameTransaction',        'newrelic_name_transaction',         ['name'], true],
             ['noticeError',            'newrelic_notice_error',             ['message', new \Exception()]],
-            ['recordDatastoreSegment', 'newrelic_record_datastore_segment', ['echo', []], true],
+            ['recordDatastoreSegment', 'newrelic_record_datastore_segment', [$anonFunction, []], true],
             ['setAppname',             'newrelic_set_appname',              ['name', 'license', false], true],
             ['setUserAttributes',      'newrelic_set_user_attributes',      ['user_value', 'account_value', 'product_value'], true],
             ['startTransaction',       'newrelic_start_transaction',        ['appname', 'license'], true],
