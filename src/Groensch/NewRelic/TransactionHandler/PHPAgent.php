@@ -172,7 +172,7 @@ class PHPAgent implements TransactionHandlerInterface
      *
      * @return bool
      */
-    public function startTransaction(string $appname, ?string $license = null)
+    public function startTransaction(string $appname, string $license = null)
     {
         return newrelic_start_transaction($appname, $license);
     }

@@ -48,7 +48,7 @@ class Handler
      * @param CustomEventHandlerInterface      $customEventHandler
      * @param TransactionHandlerInterface|null $transactionHandler If nothing is set it will use the Groensch\NewRelic\TransactionHandler\PHPAgent
      */
-    public function __construct(CustomEventHandlerInterface $customEventHandler, ?TransactionHandlerInterface $transactionHandler = null)
+    public function __construct(CustomEventHandlerInterface $customEventHandler, TransactionHandlerInterface $transactionHandler = null)
     {
         $this
             ->setCustomEventHandler($customEventHandler)

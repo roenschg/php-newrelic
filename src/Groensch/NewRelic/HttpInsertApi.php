@@ -52,7 +52,7 @@ class HttpInsertApi
      * @param callable    $errorHandler Parameters are: $errorMessage, $url, $payload
      * @param CurlWrapper $curlHandler
      */
-    public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null, ?CurlWrapper $curlHandler = null)
+    public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null, CurlWrapper $curlHandler = null)
     {
         $this->setApiAccountId($apiAccountId);
         $this->setInsertApiKey($apiInsertKey);
