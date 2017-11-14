@@ -46,7 +46,7 @@ class PHPAgent implements TransactionHandlerInterface
     /**
      * @param bool $flag
      */
-    public function backgroundJob(bool $flag = true): void
+    public function backgroundJob(bool $flag = true)
     {
         newrelic_background_job($flag);
     }
@@ -54,7 +54,7 @@ class PHPAgent implements TransactionHandlerInterface
     /**
      * @param bool $enableFlag
      */
-    public function captureParams(bool $enableFlag = true): void
+    public function captureParams(bool $enableFlag = true)
     {
         newrelic_capture_params($enableFlag);
     }
@@ -81,7 +81,7 @@ class PHPAgent implements TransactionHandlerInterface
     /**
      *
      */
-    public function endOfTransaction(): void
+    public function endOfTransaction()
     {
         newrelic_end_of_transaction();
     }
@@ -99,7 +99,7 @@ class PHPAgent implements TransactionHandlerInterface
     /**
      *
      */
-    public function ignoreApdex(): void
+    public function ignoreApdex()
     {
         newrelic_ignore_apdex();
     }
@@ -107,7 +107,7 @@ class PHPAgent implements TransactionHandlerInterface
     /**
      *
      */
-    public function ignoreTransaction(): void
+    public function ignoreTransaction()
     {
         newrelic_ignore_transaction();
     }
@@ -126,7 +126,7 @@ class PHPAgent implements TransactionHandlerInterface
      * @param string     $message
      * @param \Exception $exception
      */
-    public function noticeError(string $message, \Exception $exception): void
+    public function noticeError(string $message, \Exception $exception)
     {
         newrelic_notice_error($message, $exception);
     }

@@ -36,5 +36,5 @@ interface CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void;
+    public function recordCustomEvent(string $name, array $attributes);
 }

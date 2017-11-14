@@ -68,7 +68,7 @@ class HttpInsertApi
     /**
      * @param string $payload
      */
-    public function sendCustomEvents(string $payload): void
+    public function sendCustomEvents(string $payload)
     {
         $retryCount = 0;
         $curl = $this->getCurlHandler();
@@ -236,7 +236,7 @@ class HttpInsertApi
      * @param string $url
      * @param string $payload
      */
-    private function callErrorHandler(string $errorMessage, string $url, string $payload): void
+    private function callErrorHandler(string $errorMessage, string $url, string $payload)
     {
         $this->getErrorHandler()($errorMessage, $url, $payload);
     }

@@ -67,7 +67,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent(string $name, array $attributes)
     {
         // If the buffer get´s to full before adding a new custom event to it, we flush it and send the data
         // to new relic
@@ -83,7 +83,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      *
      */
-    private function flushCustomEventBuffer(): void
+    private function flushCustomEventBuffer()
     {
         if (strlen($this->customEventBuffer) <= 0) {
             return;
@@ -104,7 +104,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      * @param string $eventName
      * @param array  $eventData
      */
-    private function addCustomEventToBuffer(string $eventName, array $eventData): void
+    private function addCustomEventToBuffer(string $eventName, array $eventData)
     {
         $eventJson = $this->convertCustomEventInfoToJson($eventName, $eventData);
 

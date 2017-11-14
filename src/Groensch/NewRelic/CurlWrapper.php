@@ -52,7 +52,7 @@ class CurlWrapper
     /**
      * @param string $url
      */
-    public function open(string $url): void
+    public function open(string $url)
     {
         if (!$this->curlOpened) {
             $this->curlHandle = curl_init($url);
@@ -64,7 +64,7 @@ class CurlWrapper
     /**
      *
      */
-    public function close(): void
+    public function close()
     {
         if ($this->curlOpened) {
             curl_close($this->curlHandle);
