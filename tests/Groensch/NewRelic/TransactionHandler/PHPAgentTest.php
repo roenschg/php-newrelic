@@ -99,7 +99,7 @@ class PHPAgentTest extends TestCase
      * @param string $name
      * @param mixed  $returnValue
      */
-    private function defineFunctionMock(string $name, $returnValue): void
+    private function defineFunctionMock(string $name, $returnValue)
     {
         self::$functionMockCallCount[$name] = 0;
 
@@ -117,7 +117,7 @@ class PHPAgentTest extends TestCase
      * @param string $name
      * @param int    $n
      */
-    private function assertFunctionMockWasCalledNTimes(string $name, int $n): void
+    private function assertFunctionMockWasCalledNTimes(string $name, int $n)
     {
         $this->assertEquals($n, self::$functionMockCallCount[$name]);
     }

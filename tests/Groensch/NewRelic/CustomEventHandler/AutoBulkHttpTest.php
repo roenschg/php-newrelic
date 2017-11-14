@@ -38,7 +38,7 @@ class AutoBulkHttpTest extends TestCase
     /**
      *
      */
-    public function testRecordCustomEventOneEventWithFlushOnDestruct(): void
+    public function testRecordCustomEventOneEventWithFlushOnDestruct()
     {
         $httpInsertApiMock = $this
             ->getMockBuilder(HttpInsertApi::class)
@@ -68,7 +68,7 @@ class AutoBulkHttpTest extends TestCase
     /**
      * Make sure
      */
-    public function testRecordCustomEventMultibleEventsWithFlushOnDestruct(): void
+    public function testRecordCustomEventMultibleEventsWithFlushOnDestruct()
     {
         $httpInsertApiMock = $this
             ->getMockBuilder(HttpInsertApi::class)
@@ -102,7 +102,7 @@ class AutoBulkHttpTest extends TestCase
     /**
      * @expectedException \Groensch\NewRelic\CustomEventIsToBigException
      */
-    public function testThrowsCustomEventIsToBigException(): void
+    public function testThrowsCustomEventIsToBigException()
     {
         $data = ['test' => str_repeat(".", (1024*1024)+1)];
 

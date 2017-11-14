@@ -39,7 +39,7 @@ class HandlerTest extends TestCase
     /**
      *
      */
-    public function testCustomEventHandlerRecordCustomEventIsCalled(): void
+    public function testCustomEventHandlerRecordCustomEventIsCalled()
     {
         $eventName = 'test';
         $data = ['attribute' => 'value'];
@@ -64,7 +64,7 @@ class HandlerTest extends TestCase
     /**
      *
      */
-    public function testTruncateAttributeDataThatIsToLong(): void
+    public function testTruncateAttributeDataThatIsToLong()
     {
         $eventName = 'test';
         $dataGiven = ['attribute' => str_repeat('.', 4097)];
@@ -90,7 +90,7 @@ class HandlerTest extends TestCase
     /**
      * @expectedException \Groensch\NewRelic\ToManyAttributesForCustomEventException
      */
-    public function testThrowExceptionIfThereAreToManyAttributes(): void
+    public function testThrowExceptionIfThereAreToManyAttributes()
     {
         $instance = new Handler($this->getMockBuilder(CustomEventHandlerInterface::class)->getMock());
 
@@ -105,7 +105,7 @@ class HandlerTest extends TestCase
     /**
      * @expectedException \Groensch\NewRelic\NumericAttributeNameInEventException
      */
-    public function testThrowExceptionIfThereIsANumericAttributeName(): void
+    public function testThrowExceptionIfThereIsANumericAttributeName()
     {
         $instance = new Handler($this->getMockBuilder(CustomEventHandlerInterface::class)->getMock());
 

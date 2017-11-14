@@ -65,7 +65,7 @@ class Handler
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent(string $name, array $attributes)
     {
         // Throw an exception if we want to record to many attributes to an custom event
         // This happens because of a design flaw so we don´ hesitate if the program execution stops because of this
@@ -95,7 +95,7 @@ class Handler
     /**
      * @param bool $flag
      */
-    public function backgroundJob(bool $flag = true): void
+    public function backgroundJob(bool $flag = true)
     {
         $this->getTransactionHandler()->backgroundJob($flag);
     }
@@ -103,7 +103,7 @@ class Handler
     /**
      * @param bool $enableFlag
      */
-    public function captureParams(bool $enableFlag = true): void
+    public function captureParams(bool $enableFlag = true)
     {
         $this->getTransactionHandler()->captureParams($enableFlag);
     }
@@ -130,7 +130,7 @@ class Handler
     /**
      *
      */
-    public function endOfTransaction(): void
+    public function endOfTransaction()
     {
         $this->getTransactionHandler()->endOfTransaction();
     }
@@ -148,7 +148,7 @@ class Handler
     /**
      *
      */
-    public function ignoreApdex(): void
+    public function ignoreApdex()
     {
         $this->getTransactionHandler()->ignoreApdex();
     }
@@ -156,7 +156,7 @@ class Handler
     /**
      *
      */
-    public function ignoreTransaction(): void
+    public function ignoreTransaction()
     {
         $this->getTransactionHandler()->ignoreTransaction();
     }
@@ -175,7 +175,7 @@ class Handler
      * @param string     $message
      * @param \Exception $exception
      */
-    public function noticeError(string $message, \Exception $exception): void
+    public function noticeError(string $message, \Exception $exception)
     {
         $this->getTransactionHandler()->noticeError($message, $exception);
     }
@@ -248,7 +248,7 @@ class Handler
     /**
      * @param array $eventAttributes
      */
-    private function truncateAttributesThatAreToLongForTheCustomEvent(array &$eventAttributes): void
+    private function truncateAttributesThatAreToLongForTheCustomEvent(array &$eventAttributes)
     {
         array_walk($eventAttributes, function (&$value) {
             if (is_string($value)) {

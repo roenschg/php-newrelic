@@ -43,12 +43,12 @@ interface TransactionHandlerInterface
     /**
      * @param bool $flag
      */
-    public function backgroundJob(bool $flag = true): void;
+    public function backgroundJob(bool $flag = true);
 
     /**
      * @param bool $enableFlag
      */
-    public function captureParams(bool $enableFlag = true): void;
+    public function captureParams(bool $enableFlag = true);
 
     /**
      * @param string $metricName
@@ -66,7 +66,7 @@ interface TransactionHandlerInterface
     /**
      *
      */
-    public function endOfTransaction(): void;
+    public function endOfTransaction();
 
     /**
      * @param bool $ignore
@@ -78,12 +78,12 @@ interface TransactionHandlerInterface
     /**
      *
      */
-    public function ignoreApdex(): void;
+    public function ignoreApdex();
 
     /**
      *
      */
-    public function ignoreTransaction(): void;
+    public function ignoreTransaction();
 
     /**
      * @param string $name
@@ -96,7 +96,7 @@ interface TransactionHandlerInterface
      * @param string     $message
      * @param \Exception $exception
      */
-    public function noticeError(string $message, \Exception $exception): void;
+    public function noticeError(string $message, \Exception $exception);
 
     /**
      * @param callable $func

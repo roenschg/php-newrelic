@@ -56,7 +56,7 @@ class Http implements CustomEventHandlerInterface
      * @param string $name
      * @param array  $attributes
      */
-    public function recordCustomEvent(string $name, array $attributes): void
+    public function recordCustomEvent(string $name, array $attributes)
     {
         $eventObject = [
             'eventType' => $name,
