@@ -37,6 +37,16 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     private $customEventBuffer = "";
     private $customEventBufferCount = 0;
 
+    /**
+     * @var int
+     */
+    protected $timeToPassInSec = 30;
+
+    /**
+     * @var int
+     */
+    protected $lastTimeInEpoch;
+
     const API_EVENT_COUNT_PER_REQUEST_MAX = 1000;
     const API_EVENT_SIZE_PER_REQUEST_MAX = 1048576;
 
@@ -50,8 +60,8 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     public function __construct(HttpInsertApi $httpApi)
     {
         $this
-            ->setNewRelicHttpApi($httpApi)
-        ;
+            ->setNewRelicHttpApi($httpApi);
+        $this->startTimer();
     }
 
     /**
@@ -63,6 +73,30 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     }
 
     /**
+     * @return int
+     */
+    public function getTimeToPassInSec()
+    {
+        return $this->timeToPassInSec;
+    }
+
+    /**
+     * @param int $timeToPassInSec
+     */
+    public function setTimeToPassInSec($timeToPassInSec)
+    {
+        $this->timeToPassInSec = $timeToPassInSec;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastTimeInEpoch()
+    {
+        return $this->lastTimeInEpoch;
+    }
+
+    /**
      * @param string $name
      * @param array  $attributes
      */
@@ -70,12 +104,37 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     {
         // If the buffer get´s to full before adding a new custom event to it, we flush it and send the data
         // to new relic
-        if (!$this->isEnoughSpaceToAddCustomEventToBuffer($name, $attributes)) {
+        if (
+            !$this->isEnoughSpaceToAddCustomEventToBuffer($name, $attributes) or
+            $this->isTimeOver()
+        ) {
             $this->flushCustomEventBuffer();
+            $this->startTimer();
         }
 
         // We add the custom event to the buffer
         $this->addCustomEventToBuffer($name, $attributes);
+    }
+
+    /**
+     *
+     */
+    public function startTimer()
+    {
+        $this->lastTimeInEpoch = time();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTimeOver()
+    {
+        $currentTime = time();
+        if (($currentTime - $this->lastTimeInEpoch) <  $this->timeToPassInSec) {
+            return false;
+        }
+
+        return true;
     }
 
 
