@@ -45,7 +45,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * @var int
      */
-    protected $lastTimeInEpoch;
+    protected $lastTimeBufferWasFlushed;
 
     const API_EVENT_COUNT_PER_REQUEST_MAX = 1000;
     const API_EVENT_SIZE_PER_REQUEST_MAX = 1048576;
@@ -56,12 +56,18 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * AutoBulkHttp constructor.
      * @param HttpInsertApi $httpApi
+     * @param int $timeToPassInSec
+     * @throws \Exception
      */
-    public function __construct(HttpInsertApi $httpApi)
+    public function __construct(HttpInsertApi $httpApi, $timeToPassInSec = null)
     {
         $this
-            ->setNewRelicHttpApi($httpApi);
-        $this->startTimer();
+            ->setNewRelicHttpApi($httpApi)
+            ->startTimer()
+        ;
+        if (!is_null($timeToPassInSec)) {
+            $this->setTimeToPassInSec($timeToPassInSec);
+        }
     }
 
     /**
@@ -82,30 +88,35 @@ class AutoBulkHttp implements CustomEventHandlerInterface
 
     /**
      * @param int $timeToPassInSec
+     *
+     * @throws \Exception
      */
     public function setTimeToPassInSec($timeToPassInSec)
     {
+        if (!is_int($timeToPassInSec)) {
+            throw new \InvalidArgumentException('AutoBulkHttp: timeToPassInSec must be integer');
+        }
         $this->timeToPassInSec = $timeToPassInSec;
     }
 
     /**
      * @return int
      */
-    public function getLastTimeInEpoch()
+    public function getLastTimeBufferWasFlushed()
     {
-        return $this->lastTimeInEpoch;
+        return $this->lastTimeBufferWasFlushed;
     }
 
     /**
      * @param string $name
      * @param array  $attributes
+     * @throws CustomEventIsToBigException
      */
     public function recordCustomEvent($name, array $attributes)
     {
         // If the buffer get´s to full before adding a new custom event to it, we flush it and send the data
         // to new relic
-        if (
-            !$this->isEnoughSpaceToAddCustomEventToBuffer($name, $attributes) or
+        if (!$this->isEnoughSpaceToAddCustomEventToBuffer($name, $attributes) or
             $this->isTimeOver()
         ) {
             $this->flushCustomEventBuffer();
@@ -121,7 +132,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
      */
     public function startTimer()
     {
-        $this->lastTimeInEpoch = time();
+        $this->lastTimeBufferWasFlushed = time();
     }
 
     /**
@@ -130,13 +141,12 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     public function isTimeOver()
     {
         $currentTime = time();
-        if (($currentTime - $this->lastTimeInEpoch) <  $this->timeToPassInSec) {
+        if (($currentTime - $this->lastTimeBufferWasFlushed) <  $this->timeToPassInSec) {
             return false;
         }
 
         return true;
     }
-
 
     /**
      *
