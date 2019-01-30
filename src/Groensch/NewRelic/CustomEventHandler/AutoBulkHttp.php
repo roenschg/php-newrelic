@@ -57,7 +57,8 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * AutoBulkHttp constructor.
      * @param HttpInsertApi $httpApi
-     * @param int $timeToPassInSec
+     * @param int           $timeToPassInSec
+     *
      * @throws \Exception
      */
     public function __construct(HttpInsertApi $httpApi, $timeToPassInSec = null)
@@ -113,6 +114,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * @param string $name
      * @param array  $attributes
+     *
      * @throws CustomEventIsToBigException
      */
     public function recordCustomEvent($name, array $attributes)

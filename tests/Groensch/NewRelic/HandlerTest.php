@@ -115,6 +115,9 @@ class HandlerTest extends TestCase
         $instance->recordCustomEvent('test', $data);
     }
 
+    /**
+     * @return array
+     */
     public function transactionHandlerIsCalledProvider()
     {
         $anonFunction = function () {
@@ -143,14 +146,11 @@ class HandlerTest extends TestCase
      * @dataProvider transactionHandlerIsCalledProvider
      *
      * @param string $methodName
-     * @param array $parameters
-     * @param $expectedReturnValue
+     * @param array  $parameters
+     * @param mixed  $expectedReturnValue
      */
-    public function testTransactionHandlerIsCalled(
-        $methodName,
-        array $parameters,
-        $expectedReturnValue
-    ) {
+    public function testTransactionHandlerIsCalled($methodName, array $parameters, $expectedReturnValue)
+    {
         $transactionHandlerName = $this
             ->getMockBuilder(PHPAgent::class)
             ->setMethods([$methodName])
