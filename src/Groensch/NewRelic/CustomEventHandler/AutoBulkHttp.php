@@ -28,6 +28,7 @@ namespace Groensch\NewRelic\CustomEventHandler;
 
 use Groensch\NewRelic\CustomEventIsToBigException;
 use Groensch\NewRelic\HttpInsertApi;
+use Groensch\NewRelic\InvalidArgumentException;
 
 /**
  * Class CustomEventBuffer
@@ -36,6 +37,16 @@ class AutoBulkHttp implements CustomEventHandlerInterface
 {
     private $customEventBuffer = "";
     private $customEventBufferCount = 0;
+
+    /**
+     * @var int
+     */
+    protected $timeToPassInSec = 30;
+
+    /**
+     * @var int
+     */
+    protected $lastTimeBufferWasFlushed;
 
     const API_EVENT_COUNT_PER_REQUEST_MAX = 1000;
     const API_EVENT_SIZE_PER_REQUEST_MAX = 1048576;
@@ -46,12 +57,18 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     /**
      * AutoBulkHttp constructor.
      * @param HttpInsertApi $httpApi
+     * @param int $timeToPassInSec
+     * @throws \Exception
      */
-    public function __construct(HttpInsertApi $httpApi)
+    public function __construct(HttpInsertApi $httpApi, $timeToPassInSec = null)
     {
         $this
             ->setNewRelicHttpApi($httpApi)
+            ->startTimer()
         ;
+        if (!is_null($timeToPassInSec)) {
+            $this->setTimeToPassInSec($timeToPassInSec);
+        }
     }
 
     /**
@@ -63,21 +80,74 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     }
 
     /**
+     * @return int
+     */
+    public function getTimeToPassInSec()
+    {
+        return $this->timeToPassInSec;
+    }
+
+    /**
+     * @param int $timeToPassInSec
+     *
+     * @throws \Exception
+     */
+    public function setTimeToPassInSec($timeToPassInSec)
+    {
+        if (!is_int($timeToPassInSec)) {
+            throw new InvalidArgumentException('AutoBulkHttp: timeToPassInSec must be integer');
+        }
+        $this->timeToPassInSec = $timeToPassInSec;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastTimeBufferWasFlushed()
+    {
+        return $this->lastTimeBufferWasFlushed;
+    }
+
+    /**
      * @param string $name
      * @param array  $attributes
+     * @throws CustomEventIsToBigException
      */
     public function recordCustomEvent($name, array $attributes)
     {
         // If the buffer get´s to full before adding a new custom event to it, we flush it and send the data
         // to new relic
-        if (!$this->isEnoughSpaceToAddCustomEventToBuffer($name, $attributes)) {
+        if (!$this->isEnoughSpaceToAddCustomEventToBuffer($name, $attributes) or
+            $this->isTimeOver()
+        ) {
             $this->flushCustomEventBuffer();
+            $this->startTimer();
         }
 
         // We add the custom event to the buffer
         $this->addCustomEventToBuffer($name, $attributes);
     }
 
+    /**
+     *
+     */
+    public function startTimer()
+    {
+        $this->lastTimeBufferWasFlushed = time();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTimeOver()
+    {
+        $currentTime = time();
+        if (($currentTime - $this->lastTimeBufferWasFlushed) <  $this->timeToPassInSec) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      *
