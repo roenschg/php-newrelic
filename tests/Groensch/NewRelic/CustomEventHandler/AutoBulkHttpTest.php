@@ -29,6 +29,7 @@ namespace Groensch\NewRelic\CustomEventHandler;
 
 use PHPUnit\Framework\TestCase;
 use Groensch\NewRelic\HttpInsertApi;
+use Groensch\NewRelic\InvalidArgumentException;
 
 /**
  * Class AutoBulkHttpTest
@@ -169,5 +170,110 @@ class AutoBulkHttpTest extends TestCase
                 $instance->recordCustomEvent('test', $data);
             }
         }
+    }
+
+    /**
+     *
+     */
+    public function testAutoFlushBufferWhenTimeLimitNotReached()
+    {
+        $data = ['test' => 'test'];
+        $httpInsertApiMock = $this
+            ->getMockBuilder(HttpInsertApi::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $httpInsertApiMock
+            ->expects($this->never())
+            ->method('sendCustomEvents');
+        $autoBulkMock =  $this
+            ->getMockBuilder(AutoBulkHttp::class)
+            ->setConstructorArgs([$httpInsertApiMock])
+            ->setMethods(['isTimeOver'])
+            ->getMock();
+        $autoBulkMock
+            ->method('isTimeOver')
+            ->willReturn(false);
+        for ($i = 0; $i < 3; $i ++) {
+            $autoBulkMock->recordCustomEvent('test', $data);
+        }
+        $autoBulkMock->recordCustomEvent('test', $data);
+    }
+
+    /**
+     *
+     */
+    public function testAutoFlushBufferWhenTimeLimitReached()
+    {
+        $data = ['test' => 'test'];
+        $httpInsertApiMock = $this
+            ->getMockBuilder(HttpInsertApi::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $httpInsertApiMock
+            ->expects($this->once())
+            ->method('sendCustomEvents');
+        $autoBulkMock =  $this
+            ->getMockBuilder(AutoBulkHttp::class)
+            ->setConstructorArgs([$httpInsertApiMock])
+            ->setMethods(['isTimeOver'])
+            ->getMock();
+        $autoBulkMock
+            ->method('isTimeOver')
+            ->will($this->onConsecutiveCalls(false, false, false, true));
+        for ($i = 0; $i < 3; $i++) {
+            $autoBulkMock->recordCustomEvent('test', $data);
+        }
+        $autoBulkMock->recordCustomEvent('test', $data);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testStartTimer()
+    {
+        $httpInsertApiMock = $this
+            ->getMockBuilder(HttpInsertApi::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $instance = new AutoBulkHttp($httpInsertApiMock);
+        $lastTime = $instance->getLastTimeBufferWasFlushed();
+        $this->assertTrue(is_int($lastTime));
+        $time = time();
+        $instance->startTimer();
+        $newTime = $instance->getLastTimeBufferWasFlushed();
+        $endTime = time();
+        $this->assertTrue(
+            ($time <= $newTime and $newTime <= $endTime)
+        );
+    }
+
+    /**
+     *
+     */
+    public function testIsTimeOver()
+    {
+        $httpInsertApiMock = $this
+            ->getMockBuilder(HttpInsertApi::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $instance = new AutoBulkHttp($httpInsertApiMock);
+        $instance->setTimeToPassInSec(2);
+        $instance->startTimer();
+        $this->assertFalse($instance->isTimeOver());
+        sleep(2);
+        $this->assertTrue($instance->isTimeOver());
+    }
+
+    /**
+     *
+     */
+    public function testSetConstructorParamTime()
+    {
+        $httpInsertApiMock = $this
+            ->getMockBuilder(HttpInsertApi::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $instance = new AutoBulkHttp($httpInsertApiMock, 55);
+        $this->assertEquals(55, $instance->getTimeToPassInSec());
     }
 }
