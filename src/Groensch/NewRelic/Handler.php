@@ -236,6 +236,7 @@ class Handler
 
     /**
      * @param null $transactionHandler
+     *
      * @return Handler $this
      */
     public function setTransactionHandler($transactionHandler): Handler

@@ -220,7 +220,8 @@ class AutoBulkHttpTest extends TestCase
         $autoBulkMock
             ->method('isTimeOver')
             ->will($this->onConsecutiveCalls(false, false, false, true));
-        for ($i = 0; $i < 3; $i++) {
+
+        for ($i = 0; $i < 3; ++$i) {
             $autoBulkMock->recordCustomEvent('test', $data);
         }
         $autoBulkMock->recordCustomEvent('test', $data);
