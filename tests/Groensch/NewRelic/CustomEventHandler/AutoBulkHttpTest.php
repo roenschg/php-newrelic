@@ -26,6 +26,7 @@
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
+use Groensch\NewRelic\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Groensch\NewRelic\HttpInsertApi;
 
@@ -288,7 +289,7 @@ class AutoBulkHttpTest extends TestCase
      */
     public function testSetTimeToPassInSecException()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $httpInsertApiMock = $this
             ->getMockBuilder(HttpInsertApi::class)
             ->disableOriginalConstructor()

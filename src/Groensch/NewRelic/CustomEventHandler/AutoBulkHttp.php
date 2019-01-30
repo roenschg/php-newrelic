@@ -28,6 +28,7 @@ namespace Groensch\NewRelic\CustomEventHandler;
 
 use Groensch\NewRelic\CustomEventIsToBigException;
 use Groensch\NewRelic\HttpInsertApi;
+use Groensch\NewRelic\InvalidArgumentException;
 
 /**
  * Class CustomEventBuffer
@@ -94,7 +95,7 @@ class AutoBulkHttp implements CustomEventHandlerInterface
     public function setTimeToPassInSec($timeToPassInSec)
     {
         if (!is_int($timeToPassInSec)) {
-            throw new \InvalidArgumentException('AutoBulkHttp: timeToPassInSec must be integer');
+            throw new InvalidArgumentException('AutoBulkHttp: timeToPassInSec must be integer');
         }
         $this->timeToPassInSec = $timeToPassInSec;
     }

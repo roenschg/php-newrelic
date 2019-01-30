@@ -29,7 +29,7 @@ namespace Groensch\NewRelic;
 /**
  * Class InvalidArgumentException
  */
-class INVALIDARGUMENTEventException extends \Exception
+class InvalidArgumentException extends \Exception
 {
 
 }
