@@ -37,7 +37,9 @@ class HttpInsertApi
     const RETRY_LIMIT = 5;
 
     private $apiKey = "";
-    private $apiAccountId = null;
+
+    /** @var string */
+    private $dataCollectorUrl = null;
 
     /** @var callable */
     private $errorHandler = null;
@@ -45,16 +47,20 @@ class HttpInsertApi
     /** @var CurlWrapper */
     private $curlHandler;
 
+    /** @var bool */
+    private $ignoreSSLVerification;
+
     /**
      * HttpApi constructor.
-     * @param int         $apiAccountId
-     * @param string      $apiInsertKey
-     * @param callable    $errorHandler Parameters are: $errorMessage, $url, $payload
+     * @param string $dataCollectorUrl
+     * @param string $apiInsertKey
+     * @param callable $errorHandler Parameters are: $errorMessage, $url, $payload
      * @param CurlWrapper $curlHandler
+     * @param bool $ignoreSSLVerification
      */
-    public function __construct(int $apiAccountId, string $apiInsertKey, callable $errorHandler = null, CurlWrapper $curlHandler = null)
+    public function __construct(string $dataCollectorUrl, string $apiInsertKey, callable $errorHandler = null, CurlWrapper $curlHandler = null, bool $ignoreSSLVerification = false)
     {
-        $this->setApiAccountId($apiAccountId);
+        $this->setDataCollectorUrl($dataCollectorUrl);
         $this->setInsertApiKey($apiInsertKey);
         $this->setErrorHandler(
             $errorHandler ? $errorHandler : function () {
@@ -63,6 +69,7 @@ class HttpInsertApi
         $this->setCurlHandler(
             $curlHandler ? $curlHandler : new CurlWrapper()
         );
+        $this->ignoreSSLVerification = $ignoreSSLVerification;
     }
 
     /**
@@ -75,9 +82,9 @@ class HttpInsertApi
 
         do {
             // Initalize curl
-            $url = sprintf('https://insights-collector.newrelic.com/v1/accounts/%s/events', $this->getApiAccountId());
+            $url = sprintf($this->dataCollectorUrl);
             $curl->open($url);
-            $curl->setOptionsArray([
+            $curlOptions = [
                 CURLOPT_TIMEOUT => self::API_TIMEOUT_SECONDS,
                 CURLOPT_HTTPHEADER => [
                     "Content-Type: application/json",
@@ -86,7 +93,12 @@ class HttpInsertApi
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => $payload,
                 CURLOPT_RETURNTRANSFER => true,
-            ]);
+            ];
+
+            if ($this->isIgnoreSSLVerification()) {
+                $curlOptions[CURLOPT_SSL_VERIFYHOST] = false;
+            }
+            $curl->setOptionsArray($curlOptions);
 
             // Execute request to NewRelic api
             $curlRequestSuccessfull = $curl->execute();
@@ -94,8 +106,8 @@ class HttpInsertApi
                 $this->callErrorHandler(
                     sprintf(
                         "Curl request to NewRelic api was not successfull. Curl errno: %d, Curl error: '%s'",
-                        $curl->getError(),
-                        $curl->getErrno()
+                        $curl->getErrno(),
+                        $curl->getError()
                     ),
                     $url,
                     $payload
@@ -192,26 +204,6 @@ class HttpInsertApi
     }
 
     /**
-     * @return null
-     */
-    private function getApiAccountId()
-    {
-        return $this->apiAccountId;
-    }
-
-    /**
-     * @param null $apiAccountId
-     *
-     * @return HttpInsertApi $this
-     */
-    private function setApiAccountId($apiAccountId): HttpInsertApi
-    {
-        $this->apiAccountId = $apiAccountId;
-
-        return $this;
-    }
-
-    /**
      * @return callable
      */
     private function getErrorHandler(): callable
@@ -239,5 +231,43 @@ class HttpInsertApi
     private function callErrorHandler(string $errorMessage, string $url, string $payload)
     {
         $this->getErrorHandler()($errorMessage, $url, $payload);
+    }
+
+    /**
+     * @return string
+     */
+    public function getDataCollectorUrl(): string
+    {
+        return $this->dataCollectorUrl;
+    }
+
+    /**
+     * @param string $dataCollectorUrl
+     * @return HttpInsertApi
+     */
+    public function setDataCollectorUrl(string $dataCollectorUrl): self
+    {
+        $this->dataCollectorUrl = $dataCollectorUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreSSLVerification(): bool
+    {
+        return $this->ignoreSSLVerification;
+    }
+
+    /**
+     * @param bool $ignoreSSLVerification
+     * @return HttpInsertApi
+     */
+    public function setIgnoreSSLVerification(bool $ignoreSSLVerification): self
+    {
+        $this->ignoreSSLVerification = $ignoreSSLVerification;
+
+        return $this;
     }
 }

@@ -58,9 +58,9 @@ class HttpInsertApiTest extends TestCase
                 'http_code' => 200,
             ]);
 
-        $instance = new HttpInsertApi(0, '', null, $curlMock);
+        $instance = new HttpInsertApi('', '', null, $curlMock);
         $instance->setCurlHandler($curlMock);
-        $instance->sendCustomEvents('eventName', ['atttribute' => 'data']);
+        $instance->sendCustomEvents(json_encode(['eventType' => 'test', 'atttribute' => 'data']));
     }
 
     /**
@@ -86,8 +86,8 @@ class HttpInsertApiTest extends TestCase
             ]);
 
         $errorHandlerMock = $this
-            ->getMockBuilder('object')
-            ->setMethods(['__invoke'])
+            ->getMockBuilder('stdClass')
+            ->addMethods(['__invoke'])
             ->getMock()
         ;
 
@@ -96,9 +96,9 @@ class HttpInsertApiTest extends TestCase
             ->method('__invoke')
         ;
 
-        $instance = new HttpInsertApi(0, '', $errorHandlerMock, $curlMock);
+        $instance = new HttpInsertApi('', '', $errorHandlerMock, $curlMock);
         $instance->setCurlHandler($curlMock);
-        $instance->sendCustomEvents('eventName', ['atttribute' => 'data']);
+        $instance->sendCustomEvents(json_encode(['eventType' => 'test', 'atttribute' => 'data']));
     }
 
     /**
@@ -124,8 +124,8 @@ class HttpInsertApiTest extends TestCase
             ]);
 
         $errorHandlerMock = $this
-            ->getMockBuilder('object')
-            ->setMethods(['__invoke'])
+            ->getMockBuilder('stdClass')
+            ->addMethods(['__invoke'])
             ->getMock()
         ;
 
@@ -134,9 +134,9 @@ class HttpInsertApiTest extends TestCase
             ->method('__invoke')
         ;
 
-        $instance = new HttpInsertApi(0, '', $errorHandlerMock, $curlMock);
+        $instance = new HttpInsertApi('', '', $errorHandlerMock, $curlMock);
         $instance->setCurlHandler($curlMock);
-        $instance->sendCustomEvents('eventName', ['atttribute' => 'data']);
+        $instance->sendCustomEvents(json_encode(['eventType' => 'test', 'atttribute' => 'data']));
     }
 
     /**
@@ -162,8 +162,8 @@ class HttpInsertApiTest extends TestCase
             ]);
 
         $errorHandlerMock = $this
-            ->getMockBuilder('object')
-            ->setMethods(['__invoke'])
+            ->getMockBuilder('stdClass')
+            ->addMethods(['__invoke'])
             ->getMock()
         ;
 
@@ -172,9 +172,9 @@ class HttpInsertApiTest extends TestCase
             ->method('__invoke')
         ;
 
-        $instance = new HttpInsertApi(0, '', $errorHandlerMock, $curlMock);
+        $instance = new HttpInsertApi('', '', $errorHandlerMock, $curlMock);
         $instance->setCurlHandler($curlMock);
-        $instance->sendCustomEvents('eventName', ['atttribute' => 'data']);
+        $instance->sendCustomEvents(json_encode(['eventType' => 'test', 'atttribute' => 'data']));
     }
 
     /**
@@ -200,8 +200,8 @@ class HttpInsertApiTest extends TestCase
             ]);
 
         $errorHandlerMock = $this
-            ->getMockBuilder('object')
-            ->setMethods(['__invoke'])
+            ->getMockBuilder('stdClass')
+            ->addMethods(['__invoke'])
             ->getMock()
         ;
 
@@ -210,9 +210,9 @@ class HttpInsertApiTest extends TestCase
             ->method('__invoke')
         ;
 
-        $instance = new HttpInsertApi(0, '', $errorHandlerMock, $curlMock);
+        $instance = new HttpInsertApi('', '', $errorHandlerMock, $curlMock);
         $instance->setCurlHandler($curlMock);
-        $instance->sendCustomEvents('eventName', ['atttribute' => 'data']);
+        $instance->sendCustomEvents(json_encode(['eventType' => 'test', 'atttribute' => 'data']));
     }
 
     /**
@@ -244,8 +244,8 @@ class HttpInsertApiTest extends TestCase
         ;
 
         $errorHandlerMock = $this
-            ->getMockBuilder('object')
-            ->setMethods(['__invoke'])
+            ->getMockBuilder('stdClass')
+            ->addMethods(['__invoke'])
             ->getMock()
         ;
 
@@ -253,13 +253,13 @@ class HttpInsertApiTest extends TestCase
             ->expects($this->once())
             ->method('__invoke')
             ->with(
-                "Curl request to NewRelic api was not successfull. Curl errno: 0, Curl error: '104'",
+                "Curl request to NewRelic api was not successfull. Curl errno: 104, Curl error: 'SSL read: error:000000'",
                 'https://insights-collector.newrelic.com/v1/accounts/0/events',
-                'payload'
+                '{"eventType":"test","atttribute":"data"}'
             )
         ;
 
-        $instance = new HttpInsertApi(0, '', $errorHandlerMock, $curlMock);
-        $instance->sendCustomEvents('payload');
+        $instance = new HttpInsertApi('https://insights-collector.newrelic.com/v1/accounts/0/events', '', $errorHandlerMock, $curlMock);
+        $instance->sendCustomEvents(json_encode(['eventType' => 'test', 'atttribute' => 'data']));
     }
 }

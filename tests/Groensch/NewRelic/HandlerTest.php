@@ -87,9 +87,6 @@ class HandlerTest extends TestCase
         $instance->recordCustomEvent($eventName, $dataGiven);
     }
 
-    /**
-     * @expectedException \Groensch\NewRelic\ToManyAttributesForCustomEventException
-     */
     public function testThrowExceptionIfThereAreToManyAttributes()
     {
         $instance = new Handler($this->getMockBuilder(CustomEventHandlerInterface::class)->getMock());
@@ -99,12 +96,11 @@ class HandlerTest extends TestCase
             $data['attribute_'.$i] = rand();
         }
 
+        $this->expectException(ToManyAttributesForCustomEventException::class);
+
         $instance->recordCustomEvent('test', $data);
     }
 
-    /**
-     * @expectedException \Groensch\NewRelic\NumericAttributeNameInEventException
-     */
     public function testThrowExceptionIfThereIsANumericAttributeName()
     {
         $instance = new Handler($this->getMockBuilder(CustomEventHandlerInterface::class)->getMock());
@@ -112,6 +108,8 @@ class HandlerTest extends TestCase
         $data = [
             '123' => 'wrong!!!',
         ];
+
+        $this->expectException(NumericAttributeNameInEventException::class);
 
         $instance->recordCustomEvent('test', $data);
     }

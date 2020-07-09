@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace Groensch\NewRelic\CustomEventHandler;
 
+use Groensch\NewRelic\CustomEventIsToBigException;
 use PHPUnit\Framework\TestCase;
 use Groensch\NewRelic\HttpInsertApi;
 
@@ -35,9 +36,6 @@ use Groensch\NewRelic\HttpInsertApi;
  */
 class HttpTest extends TestCase
 {
-    /**
-     * @expectedException \Groensch\NewRelic\CustomEventIsToBigException
-     */
     public function testThrowsCustomEventIsToBigException()
     {
         $data = ['test' => str_repeat(".", (1024*1024)+1)];
@@ -48,6 +46,8 @@ class HttpTest extends TestCase
             ->getMock();
 
         $instance = new Http($httpInsertApiMock);
+
+        $this->expectException(CustomEventIsToBigException::class);
 
         $instance->recordCustomEvent('test', $data);
     }
