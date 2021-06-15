@@ -102,7 +102,7 @@ class CrossedFingers implements TransactionHandlerInterface
     /**
      * @return bool
      */
-    public function disableAutorum(): bool
+    public function disableAutorum(): ?bool
     {
         if (!$this->isNewrelicExtensionLoaded()) {
             return true;

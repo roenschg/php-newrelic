@@ -61,7 +61,7 @@ interface TransactionHandlerInterface
     /**
      * @return bool
      */
-    public function disableAutorum(): bool;
+    public function disableAutorum(): ?bool;
 
     /**
      *

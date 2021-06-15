@@ -73,7 +73,7 @@ class PHPAgent implements TransactionHandlerInterface
     /**
      * @return bool
      */
-    public function disableAutorum(): bool
+    public function disableAutorum(): ?bool
     {
         return newrelic_disable_autorum();
     }
