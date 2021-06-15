@@ -30,7 +30,6 @@ namespace Groensch\NewRelic\CustomEventHandler;
 use Groensch\NewRelic\CustomEventIsToBigException;
 use PHPUnit\Framework\TestCase;
 use Groensch\NewRelic\HttpInsertApi;
-use Groensch\NewRelic\InvalidArgumentException;
 
 /**
  * Class AutoBulkHttpTest
@@ -101,6 +100,9 @@ class AutoBulkHttpTest extends TestCase
         unset($instance);
     }
 
+    /**
+     * @throws CustomEventIsToBigException
+     */
     public function testThrowsCustomEventIsToBigException()
     {
         $data = ['test' => str_repeat(".", (1024*1024)+1)];
@@ -193,7 +195,7 @@ class AutoBulkHttpTest extends TestCase
         $autoBulkMock
             ->method('isTimeOver')
             ->willReturn(false);
-        for ($i = 0; $i < 3; $i ++) {
+        for ($i = 0; $i < 3; $i++) {
             $autoBulkMock->recordCustomEvent('test', $data);
         }
         $autoBulkMock->recordCustomEvent('test', $data);

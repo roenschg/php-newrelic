@@ -52,11 +52,11 @@ class HttpInsertApi
 
     /**
      * HttpApi constructor.
-     * @param string $dataCollectorUrl
-     * @param string $apiInsertKey
-     * @param callable $errorHandler Parameters are: $errorMessage, $url, $payload
+     * @param string      $dataCollectorUrl
+     * @param string      $apiInsertKey
+     * @param callable    $errorHandler          Parameters are: $errorMessage, $url, $payload
      * @param CurlWrapper $curlHandler
-     * @param bool $ignoreSSLVerification
+     * @param bool        $ignoreSSLVerification
      */
     public function __construct(string $dataCollectorUrl, string $apiInsertKey, callable $errorHandler = null, CurlWrapper $curlHandler = null, bool $ignoreSSLVerification = false)
     {
@@ -158,6 +158,56 @@ class HttpInsertApi
     }
 
     /**
+     * @return string
+     */
+    public function getDataCollectorUrl(): string
+    {
+        return $this->dataCollectorUrl;
+    }
+
+    /**
+     * @param string $dataCollectorUrl
+     *
+     * @return HttpInsertApi
+     */
+    public function setDataCollectorUrl(string $dataCollectorUrl): self
+    {
+        $this->dataCollectorUrl = $dataCollectorUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIgnoreSSLVerification(): bool
+    {
+        return $this->ignoreSSLVerification;
+    }
+
+    /**
+     * @param bool $ignoreSSLVerification
+     *
+     * @return HttpInsertApi
+     */
+    public function setIgnoreSSLVerification(bool $ignoreSSLVerification): self
+    {
+        $this->ignoreSSLVerification = $ignoreSSLVerification;
+
+        return $this;
+    }
+
+    /**
+     * @param string $errorMessage
+     * @param string $url
+     * @param string $payload
+     */
+    private function callErrorHandler(string $errorMessage, string $url, string $payload)
+    {
+        $this->getErrorHandler()($errorMessage, $url, $payload);
+    }
+
+    /**
      * @param int $statusCode
      *
      * @return bool
@@ -219,54 +269,6 @@ class HttpInsertApi
     private function setErrorHandler(callable $errorHandler): HttpInsertApi
     {
         $this->errorHandler = $errorHandler;
-
-        return $this;
-    }
-
-    /**
-     * @param string $errorMessage
-     * @param string $url
-     * @param string $payload
-     */
-    private function callErrorHandler(string $errorMessage, string $url, string $payload)
-    {
-        $this->getErrorHandler()($errorMessage, $url, $payload);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDataCollectorUrl(): string
-    {
-        return $this->dataCollectorUrl;
-    }
-
-    /**
-     * @param string $dataCollectorUrl
-     * @return HttpInsertApi
-     */
-    public function setDataCollectorUrl(string $dataCollectorUrl): self
-    {
-        $this->dataCollectorUrl = $dataCollectorUrl;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isIgnoreSSLVerification(): bool
-    {
-        return $this->ignoreSSLVerification;
-    }
-
-    /**
-     * @param bool $ignoreSSLVerification
-     * @return HttpInsertApi
-     */
-    public function setIgnoreSSLVerification(bool $ignoreSSLVerification): self
-    {
-        $this->ignoreSSLVerification = $ignoreSSLVerification;
 
         return $this;
     }

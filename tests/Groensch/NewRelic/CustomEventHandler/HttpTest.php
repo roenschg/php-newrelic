@@ -36,6 +36,9 @@ use Groensch\NewRelic\HttpInsertApi;
  */
 class HttpTest extends TestCase
 {
+    /**
+     * @throws CustomEventIsToBigException
+     */
     public function testThrowsCustomEventIsToBigException()
     {
         $data = ['test' => str_repeat(".", (1024*1024)+1)];

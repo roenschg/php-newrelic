@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace Groensch\NewRelic;
 
+use Exception;
 use Groensch\NewRelic\TransactionHandler\PHPAgent;
 use PHPUnit\Framework\TestCase;
 use Groensch\NewRelic\CustomEventHandler\CustomEventHandlerInterface;
@@ -87,6 +88,9 @@ class HandlerTest extends TestCase
         $instance->recordCustomEvent($eventName, $dataGiven);
     }
 
+    /**
+     *
+     */
     public function testThrowExceptionIfThereAreToManyAttributes()
     {
         $instance = new Handler($this->getMockBuilder(CustomEventHandlerInterface::class)->getMock());
@@ -101,6 +105,9 @@ class HandlerTest extends TestCase
         $instance->recordCustomEvent('test', $data);
     }
 
+    /**
+     *
+     */
     public function testThrowExceptionIfThereIsANumericAttributeName()
     {
         $instance = new Handler($this->getMockBuilder(CustomEventHandlerInterface::class)->getMock());
@@ -133,7 +140,7 @@ class HandlerTest extends TestCase
             ['ignoreApdex', [], null],
             ['ignoreTransaction', [], null],
             ['nameTransaction', ['name'], true],
-            ['noticeError', ['message', new \Exception()], null],
+            ['noticeError', ['message', new Exception()], null],
             ['recordDatastoreSegment', [$anonFunction, ['test']], true],
             ['setAppname', ['name', 'license', false], false],
             ['setUserAttributes', ['userValue', 'AccountValue', 'productValue'], true],
