@@ -1,6 +1,6 @@
 {
     "name": "roenschg/php-newrelic",
-    "description": "Package to send data to NewRelic with the agent or http defined by configuration.",
+    "description": "Wrapper for the NewRelic Agent API that allows to send big amounts of custom events reliably.",
     "type": "library",
     "license": "MIT",
     "authors": [
