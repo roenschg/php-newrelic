@@ -1,8 +1,17 @@
 name: learn-github-actions
 on: [push]
 jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: PHPUnit
+        run: docker-compose build && docker-compose run php composer install && docker-compose run php vendor/bin/phpunit
   phpcs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: docker-compose build && docker-compose run php composer install && docker-compose run php vendor/bin/phpunit
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: PHPUnit
+        run: docker-compose build && docker-compose run php composer install && docker-compose run php vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard && docker-compose run php vendor/bin/phpcs
