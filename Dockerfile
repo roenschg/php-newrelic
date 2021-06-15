@@ -11,3 +11,10 @@ RUN mv composer.phar /usr/local/bin/composer
 RUN apt-get update && apt-get install -y git
 
 WORKDIR /usr/src/myapp
+
+COPY src /usr/src/myapp/src
+COPY tests /usr/src/myapp/tests
+COPY composer.json /usr/src/myapp/composer.json
+COPY composer.lock /usr/src/myapp/composer.lock
+
+RUN composer install

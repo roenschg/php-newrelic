@@ -1,0 +1,17 @@
+name: main
+on: [push]
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: PHPUnit
+        run: docker-compose build && docker-compose run php composer install && docker-compose run php vendor/bin/phpunit
+  code-style:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: PHPCS
+        run: docker-compose build && docker-compose run php composer install && docker-compose run php vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard && docker-compose run php vendor/bin/phpcs -n
