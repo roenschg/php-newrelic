@@ -39,7 +39,7 @@ class CrossedFingers implements TransactionHandlerInterface
     public function __construct(?TransactionHandlerInterface $handler = null)
     {
         if (null === $handler) {
-            $this->handler = new PHPAgent();
+            $handler = new PHPAgent();
         }
 
         $this->handler = $handler;
